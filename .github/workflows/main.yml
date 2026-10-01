@@ -1,0 +1,15 @@
+name: Test macOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check macOS
+        run: |
+          sw_vers
+          xcodebuild -version
+          flutter --version || true

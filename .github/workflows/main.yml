@@ -1,15 +1,29 @@
-name: Test macOS
+name: Test Flutter iOS
 
 on:
   workflow_dispatch:
 
 jobs:
-  test-macos:
+  flutter-ios:
     runs-on: macos-latest
 
     steps:
-      - name: Check macOS
+      - name: Install Flutter
         run: |
-          sw_vers
-          xcodebuild -version
-          flutter --version || true
+          git clone https://github.com/flutter/flutter.git --depth 1 -b stable $HOME/flutter
+          echo "$HOME/flutter/bin" >> $GITHUB_PATH
+
+      - name: Check Flutter
+        run: |
+          flutter --version
+          flutter doctor -v
+
+      - name: Create test Flutter project
+        run: |
+          flutter create --platforms=ios test_app
+
+      - name: Build iOS
+        working-directory: test_app
+        run: |
+          flutter pub get
+          flutter build ios --release --no-codesign
